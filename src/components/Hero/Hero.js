@@ -1,5 +1,6 @@
+import { Link } from 'react-router-dom';
 
-function Hero(){
+function Hero() {
     //url de img >> cambiar luego
     const imageUrl = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2070&q=80';
 
@@ -19,11 +20,12 @@ function Hero(){
             <p className="text-xl md:text-2xl mb-8">
                 Tu escapada de lujo te espera.
             </p>
-            <a
-                href='/habitaciones'
+            
+            <Link
+                to='/habitaciones'
                 className="bg-blue-600 hover:bg-blue-700 text-white font-blod py-3 px-8 rounded-lg text-lg duration-300 ease-in-out transform hover:scale-105">
                     Ver Habitaciones
-            </a>
+            </Link>
         </div>
     </div>
     );
