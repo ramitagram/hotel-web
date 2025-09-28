@@ -9,6 +9,7 @@ import Header from './components/Header/Header';
 
 // Page Components
 import HomePage from './pages/HomePage';
+import RoomDetailPage from './pages/RoomDetailPage';
 import RoomsPage from './pages/RoomsPage';
 
 function App() {
@@ -24,10 +25,9 @@ function App() {
 
         <main className="flex-grow">
           <Routes>
-
           <Route path="/" element={<HomePage />} />
-
           <Route path="/Habitaciones" element={<RoomsPage />} />
+          <Route path="/Habitaciones/:id" element={<RoomDetailPage />}/>
           {/* Rutas adicionales para futuras paginas
           <Route path="/Servicios" element={<ServicesPage />} />
           <Route path="/Reservas" element={<BookingPage />} />

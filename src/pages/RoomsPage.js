@@ -1,33 +1,9 @@
 import { Helmet } from 'react-helmet';
 import RoomCard from '../components/RoomCard/RoomCard';
+import { roomsData } from '../data/roomsData';
 
 // Esta página mostrará una lista de habitaciones disponibles
 // Datos de ejemplo. luego agregarlos mediante la BD
-const roomsData = [
-
-  {
-    id: 'suite-deluxe',
-    name: 'Suite Deluxe',
-    description: 'Una lujosa suite con vistas panorámicas a la ciudad y todas las comodidades modernas.',
-    price: 199,
-    imageUrl: '/img/habitacion3.jpg' // Asegúrate de tener esta imagen en la carpeta `public/img`
-  },
-  {
-    id: 'habitacion-doble',
-    name: 'Habitación Doble',
-    description: 'Espaciosa y confortable, perfecta para parejas o amigos que viajan juntos.',
-    price: 129,
-    imageUrl: '/img/habitacion2.jpg' // Y esta también
-  },
-  {
-    id: 'habitacion-simple',
-    name: 'Habitación Simple',
-    description: 'Acogedora y funcional, ideal para viajeros solitarios que buscan confort y tranquilidad.',
-    price: 89,
-    imageUrl: '/img/habitacion1.jpg' // Y esta
-  },
-];
-
 
 function RoomsPage() {
     return (
