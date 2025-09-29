@@ -1,13 +1,12 @@
-// 1. Corregido: 'Route' ya no está duplicado.
 import { Helmet } from 'react-helmet';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
-// Layout Components
-// 2. Corregido: Rutas apuntan al archivo JS dentro de su carpeta.
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
+import BookingPage from './pages/BookingPage';
 
 // Page Components
+import ContactPage from './pages/ContactPage';
 import HomePage from './pages/HomePage';
 import RoomDetailPage from './pages/RoomDetailPage';
 import RoomsPage from './pages/RoomsPage';
@@ -26,8 +25,10 @@ function App() {
         <main className="flex-grow">
           <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/Habitaciones" element={<RoomsPage />} />
-          <Route path="/Habitaciones/:id" element={<RoomDetailPage />}/>
+          <Route path="/habitaciones" element={<RoomsPage />} />
+          <Route path="/habitaciones/:id" element={<RoomDetailPage />}/>
+          <Route path="/reservar" element={<BookingPage />} />
+          <Route path="/contacto" element={<ContactPage />} />
           {/* Rutas adicionales para futuras paginas
           <Route path="/Servicios" element={<ServicesPage />} />
           <Route path="/Reservas" element={<BookingPage />} />
