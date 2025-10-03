@@ -21,14 +21,15 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center 
-                    bg-gradient-to-br from-[oklch(79.5%_0.184_86.047)] 
-                    via-white to-[oklch(79.5%_0.184_86.047)] p-6">
+    <div
+      className="min-h-screen flex items-center justify-center 
+                 bg-gradient-to-br from-gray-200 via-gray-100 to-gray-300 p-6"
+    >
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 transition hover:shadow-2xl">
         {/* Encabezado */}
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-black">Hotel Hilton</h1>
-          <p className="mt-2 text-gray-700 text-sm">
+          <h1 className="text-3xl font-bold text-gray-900">Hotel Hilton</h1>
+          <p className="mt-2 text-gray-600 text-sm">
             Ingresá con tu cuenta para continuar
           </p>
         </div>
@@ -43,7 +44,9 @@ export default function Login() {
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium mb-1 text-black">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
             <input
               type="email"
               value={email}
@@ -51,14 +54,16 @@ export default function Login() {
               placeholder="ejemplo@hotel.com"
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-xl 
-                         focus:ring-2 focus:ring-[oklch(79.5%_0.184_86.047)] 
-                         focus:border-[oklch(79.5%_0.184_86.047)] transition bg-white text-black"
+                         focus:ring-2 focus:ring-red-900 
+                         focus:border-red-900 transition"
             />
           </div>
 
           {/* Contraseña con ojito */}
           <div>
-            <label className="block text-sm font-medium mb-1 text-black">Contraseña</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Contraseña
+            </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
@@ -67,15 +72,60 @@ export default function Login() {
                 placeholder="********"
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-xl 
-                           focus:ring-2 focus:ring-[oklch(79.5%_0.184_86.047)] 
-                           focus:border-[oklch(79.5%_0.184_86.047)] transition pr-10 bg-white text-black"
+                           focus:ring-2 focus:ring-red-900 
+                           focus:border-red-900 transition pr-10"
               />
+              {/* Botón ojito */}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-[oklch(79.5%_0.184_86.047)] focus:outline-none"
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-red-900 focus:outline-none"
               >
-                👁️
+                {showPassword ? (
+                  // 👁️ Ojo abierto (silueta básica)
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                ) : (
+                  // 👁️ Ojo tachado (silueta básica)
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.251-3.592m2.548-2.13A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.5 5.818M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 3l18 18"
+                    />
+                  </svg>
+                )}
               </button>
             </div>
           </div>
@@ -90,17 +140,13 @@ export default function Login() {
         </form>
 
         {/* Footer con demos */}
-        <div className="mt-6 text-center text-sm text-gray-700 space-y-2">
+        <div className="mt-6 text-center text-sm text-gray-500 space-y-2">
           <p>
-            <span className="font-bold text-[oklch(79.5%_0.184_86.047)]">
-              Admin demo:
-            </span>{" "}
+            <span className="font-bold text-red-900">Admin demo:</span>{" "}
             <span className="font-medium">admin@hotel.com / 123456</span>
           </p>
           <p>
-            <span className="font-bold text-[oklch(79.5%_0.184_86.047)]">
-              Operador demo:
-            </span>{" "}
+            <span className="font-bold text-red-900">Operador demo:</span>{" "}
             <span className="font-medium">operador@hotel.com / 123456</span>
           </p>
         </div>
