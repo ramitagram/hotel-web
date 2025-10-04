@@ -3,15 +3,15 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
-import BookingPage from './pages/BookingPage';
-import ServicesPage from './pages/ServicesPage';
 
 // Page Components
+import AboutPage from './pages/AboutPage';
+import BookingPage from './pages/BookingPage';
 import ContactPage from './pages/ContactPage';
 import HomePage from './pages/HomePage';
 import RoomDetailPage from './pages/RoomDetailPage';
 import RoomsPage from './pages/RoomsPage';
-
+import ServicesPage from './pages/ServicesPage';
 
 function App() {
   return (
@@ -32,12 +32,10 @@ function App() {
           <Route path="/reservar" element={<BookingPage />} />
           <Route path="/contacto" element={<ContactPage />} />
           <Route path="/servicios" element={<ServicesPage />} />
-          {/* Rutas adicionales para futuras paginas
-          <Route path="*" element={<NotFoundPage />} />
-          */}
+          <Route path="/sobre-nosotros" element={<AboutPage />}/>
         </Routes>
         </main>
-
+        
         <Footer />
       </div>
     </Router>
