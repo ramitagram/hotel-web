@@ -13,6 +13,7 @@ function Header() {
             <li><Link to="/habitaciones" className="text-gray-600 hover:text-blue-500 font-medium">Habitaciones</Link></li>
             <li><Link to="/servicios" className="text-gray-600 hover:text-blue-500 font-medium">Servicios</Link></li>
             <li><Link to="/contacto" className="text-gray-600 hover:text-blue-500 font-medium">Contacto</Link></li>
+            <li><Link to="/sobre-nosotros" className="text-gray-600 hover:text-blue-500 font-medium">Sobre Nosotros</Link></li>
           </ul>
         </nav>
       </div>
