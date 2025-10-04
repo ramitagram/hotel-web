@@ -4,12 +4,14 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
 import BookingPage from './pages/BookingPage';
+import ServicesPage from './pages/ServicesPage';
 
 // Page Components
 import ContactPage from './pages/ContactPage';
 import HomePage from './pages/HomePage';
 import RoomDetailPage from './pages/RoomDetailPage';
 import RoomsPage from './pages/RoomsPage';
+
 
 function App() {
   return (
@@ -29,10 +31,8 @@ function App() {
           <Route path="/habitaciones/:id" element={<RoomDetailPage />}/>
           <Route path="/reservar" element={<BookingPage />} />
           <Route path="/contacto" element={<ContactPage />} />
+          <Route path="/servicios" element={<ServicesPage />} />
           {/* Rutas adicionales para futuras paginas
-          <Route path="/Servicios" element={<ServicesPage />} />
-          <Route path="/Reservas" element={<BookingPage />} />
-          <Route path="/Contacto" element={<ContactPage />} />
           <Route path="*" element={<NotFoundPage />} />
           */}
         </Routes>
