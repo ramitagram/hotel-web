@@ -12,12 +12,13 @@ function RoomDetailPage() {
         return <div>Habitacion no encontrada.</div>;
     }
 
-    return(
+    return (
         <div className="container mx-auto p-4 py-8">
             <Helmet>
                 <title>{`${room.name} - Hotel Hilton`}</title>
             </Helmet>
-            <img src={room.imageUrl} alt={room.name} className="w-full h-96 object-cover rounded-lg shadow-lg mb-8"/>
+
+            <img src={room.imageUrl} alt={room.name} className="w-full h-96 object-cover rounded-lg shadow-lg mb-8" />
 
             <div className="bg-white p-8 rounded-lg shadow-md">
                 <h1 className="text-4xl font-extrabold text-gray-800 mb-4">{room.name}</h1>
@@ -29,7 +30,8 @@ function RoomDetailPage() {
                     </span>
                     <Link
                         to="/reservar"
-                        className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition duration-300">
+                        className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition duration-300"
+                    >
                         Reservar Ahora
                     </Link>
                 </div>
@@ -37,5 +39,6 @@ function RoomDetailPage() {
         </div>
     );
 }
+
 
 export default RoomDetailPage;

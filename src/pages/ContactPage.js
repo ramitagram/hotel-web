@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet';
+import Map from '../components/Map/Map';
 
 function ContactPage() {
     // Usamos useState para guardar la información del formulario
@@ -9,7 +10,8 @@ function ContactPage() {
         message: '',
     });
     const [statusMessage, setStatusMessage] = useState('');
-
+    const [showFullMap, setShowFullMap] = useState(false);
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -83,11 +85,38 @@ function ContactPage() {
             </form>
             
             {statusMessage && (
-            <p className="mt-6 text-center text-green-600 bg-green-100 p-4 rounded-lg">
+                <p className="mt-6 text-center text-green-600 bg-green-100 p-4 rounded-lg">
                 {statusMessage}
-            </p>
+                </p>
             )}
         </div>
+            
+        {/* --- UBICACIÓN --- */}
+            <div className="max-w-4xl mx-auto mt-12">
+                <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Nuestra Ubicación</h2>
+                
+                {/* Mini-mapa con botón */}
+                {!showFullMap && (
+                    <div className="relative h-64 rounded-lg shadow-lg overflow-hidden mb-6">
+                        <Map smallMap={true} /> {/* Le pasamos una prop para que el mapa sepa si es pequeño */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                            <button
+                                onClick={() => setShowFullMap(true)}
+                                className="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center gap-2"
+                            >
+                                📍 Ver ubicación en el mapa
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Mapa completo (se muestra al hacer clic en el botón) */}
+                {showFullMap && (
+                    <div className="h-[60vh] rounded-lg shadow-lg overflow-hidden">
+                        <Map />
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

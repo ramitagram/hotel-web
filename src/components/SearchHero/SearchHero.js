@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css'; //estilos principales
 import 'react-date-range/dist/theme/default.css'; //colores theme
+import { useNavigate } from 'react-router-dom';
 
 function SearchHero() {
+    const navigate = useNavigate();
     const [showCalendar, setShowCalendar] = useState(false);
     const [showGuestSelector, setShowGuestSelector] = useState(false);
     const [dates, setDates] = useState([
@@ -26,6 +28,10 @@ function SearchHero() {
             ...prev,
             [type]: operation === 'increase' ? prev[type] + 1 : prev[type] - 1,
         }));
+    };
+
+    const handleSearch = () => {
+        navigate('/habitaciones', { state: { dates, guests } });
     };
 
     const guestText = `${guests.adults} Adultos, ${guests.children} Niños, ${guests.rooms} Hab.`;
@@ -61,7 +67,7 @@ function SearchHero() {
                         <p className="font-bold">{guestText}</p>
                     </div>
 
-                    <button className="bg-blue-600 text-white font-bold px-8 py-3 rounded-full hover:bg-blue-700">
+                    <button onClick={handleSearch} className="bg-blue-600 text-white font-bold px-8 py-3 rounded-full hover:bg-blue-700">
                         Buscar
                     </button>
                 </div>

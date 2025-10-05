@@ -1,5 +1,5 @@
 // pages de reserva
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; //estilos
 import { Helmet } from 'react-helmet';
@@ -12,6 +12,26 @@ function BookingPage(){
     const [guests, setGuests] = useState(1);
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
+    const [extras, setExtras] = useState({
+        desayuno: false,
+        estacionamiento: false,
+    });
+
+    const [totalPrice, setTotalPrice] = useState(198); //precio base
+    useEffect(() => {
+        const basePrice = 199; // Precio base de la habitación
+        let calculatedExtras = 0;
+
+        if (extras.desayuno) {
+            calculatedExtras += 20;
+        }
+        if (extras.estacionamiento) {
+            calculatedExtras += 15;
+        }
+
+        setTotalPrice(basePrice + calculatedExtras);
+
+    }, [extras]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -21,6 +41,14 @@ function BookingPage(){
         }
         const bookingDetails = { fullName, email, guests, startDate, endDate };
         alert(`¡Reserva confirmada! Detalles: ${JSON.stringify(bookingDetails, null, 2)}`);
+    };
+
+    const handleExtrasChange = (e) => {
+    const { name, checked } = e.target;
+    setExtras(prevExtras => ({
+        ...prevExtras,
+        [name]: checked
+    }));
     };
 
     return (
@@ -75,6 +103,42 @@ function BookingPage(){
             <div className="mb-4">
                 <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Correo Electrónico</label>
                 <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+            </div>
+
+            <div className="border-t pt-6 mt-6">
+                <div className="flex justify-between items-center">
+                    <span className="text-xl font-semibold text-gray-800">Total a Pagar:</span>
+                    <span className="text-3xl font-bold text-blue-600">${totalPrice}</span>
+                </div>
+            </div>
+
+            {/* Seccion de Extras */}
+            <div className='border-t pt-6 mt-6'>
+                <h3 className='text-xl font-semibold mb-4 text-gray-800'>Servicios Adicionales</h3>
+                <div className='space-y-3'>
+                    <div className='flex items-center'>
+                        <input
+                            type='checkbox'
+                            id='desayuno'
+                            name='desayuno'
+                            checked={extras.desayuno}
+                            onChange={handleExtrasChange}
+                            className='h-5 w-5 rounded text-blue-600 focus:ring-blue-500'
+                        />
+                        <label htmlFor='desayuno' className='ml-3 text-gray-700'>Desayuno Buffet ($20/Noche)</label>
+                    </div>
+                    <div className='flex items-center'>
+                        <input
+                            type="checkbox"
+                            id="estacionamiento"
+                            name="estacionamiento"
+                            checked={extras.estacionamiento}
+                            onChange={handleExtrasChange}
+                            className='h-5 w-5 rounded text-blue-600 focus:ring-blue-500'
+                        />
+                        <label htmlFor='estacionamiento' className='ml-3 text-gray-700'>Estacionamiento Privado ($15/Noche)</label>
+                    </div>
+                </div>
             </div>
 
             <div className="text-center mt-8">
