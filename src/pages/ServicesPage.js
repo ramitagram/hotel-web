@@ -5,7 +5,7 @@ const servicesData = [
     { id: 1,
         title: 'Piscina y Solarium',
         description: 'Relajate en nuesta piscina climatizada con vistas paronamicas y disfruta del sol en nuestro espacioso solarium.',
-        icon: 'fas fa-swimming-pool' // Usaremos Font Awesome
+        icon: 'fas fa-swimming-pool'
     },
     {
     id: 2,
