@@ -54,12 +54,12 @@ export default function Login() {
               placeholder="ejemplo@hotel.com"
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-xl 
-                         focus:ring-2 focus:ring-red-900 
-                         focus:border-red-900 transition"
+                         focus:ring-2 focus:ring-blue-700 
+                         focus:border-blue-700 transition"
             />
           </div>
 
-          {/* Contraseña con ojito */}
+          {/* Contraseña */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Contraseña
@@ -72,58 +72,23 @@ export default function Login() {
                 placeholder="********"
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-xl 
-                           focus:ring-2 focus:ring-red-900 
-                           focus:border-red-900 transition pr-10"
+                           focus:ring-2 focus:ring-blue-700 
+                           focus:border-blue-700 transition pr-10"
               />
-              {/* Botón ojito */}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-red-900 focus:outline-none"
+                className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-blue-700 focus:outline-none"
               >
                 {showPassword ? (
-                  // 👁️ Ojo abierto (silueta básica)
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                    />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
                 ) : (
-                  // 👁️ Ojo tachado (silueta básica)
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.251-3.592m2.548-2.13A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.5 5.818M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 3l18 18"
-                    />
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.251-3.592m2.548-2.13A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.956 9.956 0 01-4.5 5.818M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3l18 18" />
                   </svg>
                 )}
               </button>
@@ -133,7 +98,9 @@ export default function Login() {
           {/* Botón ingresar */}
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-red-900 text-white font-semibold shadow hover:bg-red-800 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition"
+            className="w-full py-3 rounded-xl bg-blue-700 text-white font-semibold shadow 
+                       hover:bg-blue-600 hover:shadow-lg hover:-translate-y-0.5 
+                       active:translate-y-0 transition"
           >
             Ingresar
           </button>
@@ -142,11 +109,11 @@ export default function Login() {
         {/* Footer con demos */}
         <div className="mt-6 text-center text-sm text-gray-500 space-y-2">
           <p>
-            <span className="font-bold text-red-900">Admin demo:</span>{" "}
+            <span className="font-bold text-blue-700">Admin demo:</span>{" "}
             <span className="font-medium">admin@hotel.com / 123456</span>
           </p>
           <p>
-            <span className="font-bold text-red-900">Operador demo:</span>{" "}
+            <span className="font-bold text-blue-700">Operador demo:</span>{" "}
             <span className="font-medium">operador@hotel.com / 123456</span>
           </p>
         </div>
