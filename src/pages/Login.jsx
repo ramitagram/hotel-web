@@ -95,6 +95,16 @@ export default function Login() {
             </div>
           </div>
 
+          <div className="text-center text-sm mt-1">
+            <span className="text-gray-600">¿No tenés cuenta?</span>{" "}
+            <a
+              href="/registro"
+              className="font-semibold text-blue-700 hover:underline"
+            >
+              Crear una nueva cuenta
+            </a>
+          </div>
+
           {/* Botón ingresar */}
           <button
             type="submit"
