@@ -54,7 +54,7 @@ export default function MapaHabitaciones() {
       {/* Render pisos */}
       {pisos.map((piso, i) => (
         <div key={i} className="mb-6">
-          <h2 className="text-lg font-semibold mb-2">Piso {i + 1}00</h2>
+          <h2 className="text-lg font-semibold mb-2">Piso {i + 1}</h2>
           <div className="grid grid-cols-11 gap-2">
             {piso.map((hab) => (
               <div
