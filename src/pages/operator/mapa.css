@@ -1,0 +1,22 @@
+.react-calendar {
+  width: 100%;
+  border: none;
+  font-family: "Inter", sans-serif;
+}
+
+.react-calendar__tile.occupied,
+.ocupado {
+  background: #fca5a5 !important;
+  color: white !important;
+  border-radius: 8px;
+}
+
+.react-calendar__tile.libre {
+  background: #bbf7d0 !important;
+  color: #065f46 !important;
+  border-radius: 8px;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #ccc;
+}

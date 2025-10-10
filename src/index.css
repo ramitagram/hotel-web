@@ -1,8 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @import "@fontsource/inter/index.css";
 
 body {
   font-family: "Inter", sans-serif;
 }
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
