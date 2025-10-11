@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
-import AdminLayout from "./pages/admin/AdminLayout";
-import OperatorLayout from "./pages/operator/OperatorLayout";
-import MapaHabitaciones from "./pages/operator/MapaHabitaciones";
-import Registro from "./pages/Registro"; // 👈 Asegurate que esta ruta sea correcta
+import Login from "./pages/Login.jsx";
+import AdminLayout from "./pages/admin/AdminLayout.jsx";
+import OperatorLayout from "./pages/operator/OperatorLayout.jsx";
+import MapaHabitaciones from "./pages/operator/MapaHabitaciones.jsx";
+import Registro from "./pages/Registro.jsx";
+import ProcesarPago from "./pages/operator/ProcesarPago.jsx";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         {/* Panel del Operador */}
         <Route path="/operator/*" element={<OperatorLayout />}>
           <Route path="mapa" element={<MapaHabitaciones />} />
+          <Route path="pagos" element={<ProcesarPago />} />
         </Route>
       </Routes>
     </Router>
