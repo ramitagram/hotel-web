@@ -2,10 +2,14 @@ import { Link } from 'react-router-dom';
 
 //Este componente recibe informacion de una habitacion a traves de 'props'
 function RoomCard({ room }) {
+
+  const startingPrice = room.tariffs && room.tariffs.length > 0 ? room.tariffs[0].price : 'N/A';
+
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
-      <img 
-        src={room.imageUrl} 
+      <img
+        src={room.images[0]}
         alt={room.name}
         className="w-full h-56 object-cover"
       />
@@ -13,7 +17,7 @@ function RoomCard({ room }) {
         <h3 className="text-2xl font-semibold mb-2 text-gray-800">{room.name}</h3>
         <p className="text-gray-600 mb-4">{room.description}</p>
         <div className="flex justify-between items-center">
-          <span className="text-xl font-bold text-blue-600">{`Desde $${room.price}/noche`}</span>
+          <span className="text-xl font-bold text-blue-600">{`Desde $${startingPrice}/noche`}</span>
           {/* Este enlace más adelante nos llevará a la página de detalle de esta habitación */}
           <Link
             to={`/habitaciones/${room.id}`}
