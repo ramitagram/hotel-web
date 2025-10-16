@@ -1,43 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-
-// Inicializar Mercado Pago con tu Public Key (la de prueba)
-initMercadoPago("TEST-97a7471e-8e9d-456d-a16f-40c0406b2e94", { locale: "es-AR" });
+import React, { useState } from "react";
 
 export default function ProcesarPago() {
-  const [reservas, setReservas] = useState([]);
-  const [preferenceId, setPreferenceId] = useState(null);
+  const [reservas, setReservas] = useState([
+    { id: 1, habitacion: 101, cliente: "Juan Pérez", monto: 60000, estado: "pendiente" },
+    { id: 2, habitacion: 202, cliente: "María Gómez", monto: 80000, estado: "pendiente" },
+  ]);
 
- useEffect(() => {
-  fetch("http://localhost:3001/api/reservas")
-    .then((res) => {
-      if (!res.ok) throw new Error("Error HTTP " + res.status);
-      return res.json();
-    })
-    .then((data) => {
-      console.log("✅ Reservas recibidas:", data);
-      setReservas(data);
-    })
-    .catch((err) => {
-      console.error("❌ Error al cargar reservas:", err);
-    });
-}, []);
-
-
-  // Crear preferencia (pago)
-  const crearPreferencia = async (reservaId) => {
-    const res = await fetch("http://localhost:3001/api/create_preference", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ reservaId }),
-    });
-    const data = await res.json();
-    setPreferenceId(data.preferenceId);
+  const procesarPagoSimulado = (id, nuevoEstado) => {
+    setReservas((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, estado: nuevoEstado } : r))
+    );
   };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold text-rose-900 mb-6">Procesar Pagos</h1>
+      <h1 className="text-2xl font-bold text-rose-900 mb-6">Procesar Pagos </h1>
 
       <table className="w-full border-collapse">
         <thead>
@@ -56,34 +33,38 @@ export default function ProcesarPago() {
               <td className="p-2">{r.cliente}</td>
               <td className="p-2">${r.monto.toLocaleString()}</td>
               <td className="p-2 font-semibold capitalize">
-                {r.estado === "approved" ? (
+                {r.estado === "aprobado" ? (
                   <span className="text-green-600">Pagado</span>
+                ) : r.estado === "rechazado" ? (
+                  <span className="text-red-600">Rechazado</span>
                 ) : (
                   <span className="text-yellow-600">{r.estado}</span>
                 )}
               </td>
-              <td className="p-2 text-center">
-                {r.estado === "approved" ? (
-                  "—"
-                ) : (
-                  <button
-                    onClick={() => crearPreferencia(r.id)}
-                    className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-1 rounded"
-                  >
-                    Procesar Pago
-                  </button>
-                )}
+              <td className="p-2 text-center space-x-2">
+                <button
+                  onClick={() => procesarPagoSimulado(r.id, "aprobado")}
+                  className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
+                >
+                  Aprobar
+                </button>
+                <button
+                  onClick={() => procesarPagoSimulado(r.id, "rechazado")}
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                >
+                  Rechazar
+                </button>
+                <button
+                  onClick={() => procesarPagoSimulado(r.id, "pendiente")}
+                  className="bg-yellow-400 hover:bg-yellow-500 text-black px-3 py-1 rounded"
+                >
+                  Pendiente
+                </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-
-      {preferenceId && (
-        <div className="mt-6 flex justify-center">
-          <Wallet initialization={{ preferenceId }} />
-        </div>
-      )}
     </div>
   );
 }
