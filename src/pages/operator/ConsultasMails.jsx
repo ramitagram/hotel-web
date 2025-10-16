@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function ConsultasOperador() {
+export default function ConsultasMails() {
   const [form, setForm] = useState({
     destinatario: "",
     asunto: "",

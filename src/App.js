@@ -5,6 +5,7 @@ import OperatorLayout from "./pages/operator/OperatorLayout.jsx";
 import MapaHabitaciones from "./pages/operator/MapaHabitaciones.jsx";
 import Registro from "./pages/Registro.jsx";
 import ProcesarPago from "./pages/operator/ProcesarPago.jsx";
+import ConsultasMails from "./pages/operator/ConsultasMails.jsx";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/operator/*" element={<OperatorLayout />}>
           <Route path="mapa" element={<MapaHabitaciones />} />
           <Route path="pagos" element={<ProcesarPago />} />
+          <Route path="consultas" element={<ConsultasMails />} />
         </Route>
       </Routes>
     </Router>
