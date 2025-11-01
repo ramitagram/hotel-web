@@ -8,9 +8,12 @@ import Header from './components/Header/Header';
 
 // Page Components
 import AboutPage from './pages/AboutPage';
+import AccountPage from './pages/AccountPage';
 import BookingPage from './pages/BookingPage';
 import ContactPage from './pages/ContactPage';
 import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 import RoomDetailPage from './pages/RoomDetailPage';
 import RoomsPage from './pages/RoomsPage';
 import ServicesPage from './pages/ServicesPage';
@@ -35,6 +38,9 @@ function App() {
           <Route path="/contacto" element={<ContactPage />} />
           <Route path="/servicios" element={<ServicesPage />} />
           <Route path="/sobre-nosotros" element={<AboutPage />}/>
+          <Route path="/registrar" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/mi-cuenta" element={<AccountPage />} />
         </Routes>
         </main>
         

@@ -1,12 +1,16 @@
 // pages de reserva
 import { getNameList } from 'country-list'; //lista-paises
 import { differenceInDays, format } from 'date-fns';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css'; //estilos
 import { Helmet } from 'react-helmet';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { auth } from '../firebase/config';
 
 function BookingPage(){
+    const { currentUser } = useAuth();
     const countryOptions = getNameList(); //opciones de paises
     const location = useLocation();
     const navigate = useNavigate();
@@ -16,29 +20,31 @@ function BookingPage(){
     const [step, setStep] = useState(1); //paso 1
     const [formData, setFormData] = useState({
     //datos personales
-        firstName: "",
-        lastName: "",
+        firstName:currentUser?.displayName?.split(' ')[0] || '', // Toma el primer nombre si existe
+        lastName: currentUser?.displayName?.split(' ').slice(1).join(' ') || '', // Toma el resto como apellido
         nationality: "",
         docType: "",
         docNumber: "",
         address: "",
         country: "", // Añadido pais de residencia
-    //datos de contacto
+        //datos de contacto
         phone: "",
-        email: "",
-        confirmEmail: "",
+        email: currentUser?.email || '',
+        confirmEmail: currentUser?.email || '',
         specialRequests: "",
-    //datos de pago (se mantienen para el paso 3)
+        //datos de pago (se mantienen para el paso 3)
         cardType: "",
         cardNumber: "",
         cardExpiry: "",
         cardCVC: ""
     });
-
+    // eslint-disable-next-line no-unused-vars
     const [startDate, setStartDate] = useState(location.state?.dates?.[0]?.startDate || new Date());
     const [endDate, setEndDate] = useState(location.state?.dates?.[0]?.endDate || new Date(new Date().setDate(new Date().getDate() + 1)));
     const [nights, setNights] = useState(1);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [createAccount, setCreateAccount] = useState(false);
+    const [password, setPassword] = useState('');
 
     //navegacion segura
     useEffect(() => {
@@ -72,22 +78,37 @@ function BookingPage(){
     }
 
     //manejo del envio del formulario
-    const handleSubmit = (e)=>{
+    const handleSubmit = async (e)=>{
         e.preventDefault();
         if(step === 1){
             setStep(2);
         }else if(step ===2){
-            // Validación simple. Coinciden los emails?
+            // Validación de emails
             if (formData.email !== formData.confirmEmail) {
-                alert('Los correos electrónicos no coinciden. Por favor, verifíquelos.');
-                return; //se detiene si no coinciden
+                alert('Los correos electrónicos no coinciden.');
+                return;
             }
-            setStep(3);
+
+            if (!currentUser && createAccount) {
+                if (password.length < 6) {
+                    alert('La contraseña debe tener al menos 6 caracteres.');
+                    return;
+                }
+                try {
+                    console.log("Creando cuenta de invitado...");
+                    await createUserWithEmailAndPassword(auth, formData.email, password);
+                    console.log("¡Cuenta de invitado creada con éxito!");
+                } catch (err) {
+                    console.error("Error al crear cuenta de invitado:", err);
+                    alert('Error al crear la cuenta: ' + err.message);
+                    return;
+                }
+            }
+            setStep(3); // Si todo fue bien (o si no se creó cuenta), avanzamos al paso 3
+            
         }else if(step ===3){
-            // Lógica final - por ahora solo una alerta
             console.log("Datos Finales:", { room, tariff, formData, nights, totalPrice });
             alert('Reserva enviada con éxito (simulación). Revisa la consola para ver los datos.');
-            //aqui api de mercado pago.
         }
     };
 
@@ -193,6 +214,40 @@ function BookingPage(){
                                 <p className="mt-1 text-xs text-gray-500">Las solicitudes especiales están sujetas a disponibilidad y pueden implicar cargos adicionales.</p>
                             </div>
                             
+                            {!currentUser && (
+                                <div className="border-t pt-4 space-y-4">
+                                    {/* Checkbox crear cuenta */}
+                                    <div className="flex items-center">
+                                        <input
+                                            id="createAccount"
+                                            name="createAccount"
+                                            type="checkbox"
+                                            checked={createAccount}
+                                            onChange={(e) => setCreateAccount(e.target.checked)}
+                                            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"/>
+                                        <label htmlFor="createAccount" className="ml-3 block text-sm font-medium text-gray-700">
+                                            Deseo crear una cuenta con estos datos
+                                        </label>
+                                    </div>
+                                    {/* Campo de contraseña (solo si el checkbox esta marcado) */}
+                                    {createAccount && (
+                                        <div className="animate-fade-in"> {/* 'animate-fade-in' necesita definirse en tailwind.config.js o CSS */}
+                                            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Crear una contraseña</label>
+                                            <input
+                                                type="password"
+                                                name="password"
+                                                id="password"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                required
+                                                className="w-full border border-gray-300 rounded-md shadow-sm p-2"
+                                                placeholder="Mínimo 6 caracteres"
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
                             {/* Botones de Navegacion */}
                             <div className="flex justify-between pt-4">
                                 <button type="button" onClick={() => setStep(1)} className="text-gray-600 hover:text-gray-900 font-medium py-2 px-4 rounded-lg">
@@ -209,28 +264,70 @@ function BookingPage(){
                 {step === 3 &&(
                     <section>
                         <h2 className="text-2xl font-bold mb-6 border-b pb-4"><i className="fas fa-credit-card mr-2"></i> Información de pago</h2>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            {/* --- Placeholder para el formulario de Mercado Pago --- */}
-                            <div className="bg-gray-100 p-6 rounded-md text-center">
-                                <img src="/img/mercado-pago.png" alt="Mercado Pago" className="h-10 mx-auto mb-4" /> {/* Necesitarás un logo de MP */}
-                                <p className="text-gray-600">
-                                    Aquí se integrará el formulario de pago de Mercado Pago.
-                                </p>
+                        <form onSubmit={handleSubmit} className="space-y-6">
+
+                            {/* --- SECCIÓN PARA MERCADO PAGO --- */}
+                            <div className="bg-blue-50 border border-blue-200 p-6 rounded-md text-center">
+                                <img src="/img/mercado-pago.png" alt="Mercado Pago" className="h-8 mx-auto mb-3" />
+                                <p className="text-gray-700 font-medium text-lg">Paga de forma segura con Mercado Pago</p>
                                 <p className="text-sm text-gray-500 mt-2">
-                                    (Esta parte se conectará con el backend)
+                                    Serás redirigido a Mercado Pago para completar tu compra de forma segura.
+                                    <br />(La integración real requiere backend)
                                 </p>
+                                {/* Aquí se montaría el componente/botón de checkout de MP */}
+                                <button
+                                    type="button" onClick={() => alert('Redirigiendo a Mercado Pago (Simulación)')} // Acción simulada
+                                    className="mt-4 bg-sky-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-sky-600 transition duration-300">
+                                    Pagar con Mercado Pago
+                                </button>
                             </div>
-                            {/* --- Fin Placeholder --- */}
-                            <div className="flex justify-between pt-4">
+
+                            <div className="flex items-center justify-center">
+                                <span className="bg-gray-300 h-px flex-grow"></span>
+                                <span className="px-4 text-sm text-gray-500">O ingresa los datos de tu tarjeta</span>
+                                <span className="bg-gray-300 h-px flex-grow"></span>
+                            </div>
+
+                            {/* --- FORMULARIO BÁSICO DE TARJETA --- */}
+                            <div className="space-y-4">
+                                <div>
+                                    <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700 mb-1">Número de tarjeta</label>
+                                    <input type="text" name="cardNumber" id="cardNumber" /* value={formData.cardNumber} onChange={handleChange} */ required className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="•••• •••• •••• ••••" />
+                                </div>
+                                {/* Nombre del titular */}
+                                <div>
+                                    <label htmlFor="cardName" className="block text-sm font-medium text-gray-700 mb-1">Nombre del titular</label>
+                                    <input type="text" name="cardName" id="cardName" /* value={...} onChange={...} */ required className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Como aparece en la tarjeta" />
+                                </div>
+                                {/* Vencimiento y CVC */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div className="md:col-span-2 grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label htmlFor="cardExpiryMonth" className="block text-sm font-medium text-gray-700 mb-1">Mes Exp.</label>
+                                            <input type="text" name="cardExpiryMonth" id="cardExpiryMonth" /* value={...} onChange={...} */ required className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="MM" maxLength="2" /> {/* maxLength ayuda */}
+                                        </div>
+                                        <div>
+                                            <label htmlFor="cardExpiryYear" className="block text-sm font-medium text-gray-700 mb-1">Año Exp.</label>
+                                            <input type="text" name="cardExpiryYear" id="cardExpiryYear" /* value={...} onChange={...} */ required className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="AA" maxLength="2" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="cardCVC" className="block text-sm font-medium text-gray-700 mb-1">CVC</label>
+                                        <input type="text" name="cardCVC" id="cardCVC" /* value={...} onChange={...} */ required className="w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="•••" maxLength="4" />
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Botones de Navegación */}
+                            <div className="flex justify-between pt-6 border-t mt-8">
                                 <button type="button" onClick={() => setStep(2)} className="text-gray-600 hover:text-gray-900 font-medium py-2 px-4 rounded-lg">
                                     ← Volver
                                 </button>
-                                <button type="submit" className="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700">
+                                <button type="submit" className="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 text-lg"> {/* Botón más grande */}
                                     Confirmar y Pagar
                                 </button>
                             </div>
                         </form>
-                    </section>
+                </section>
                 )}
                 </div>
                 
