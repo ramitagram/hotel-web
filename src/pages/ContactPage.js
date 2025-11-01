@@ -1,30 +1,60 @@
-import { useState } from 'react';
+import emailjs from '@emailjs/browser';
+import { useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Map from '../components/Map/Map';
 
 function ContactPage() {
-    // Usamos useState para guardar la información del formulario
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         message: '',
     });
+
+    const [isSending, setIsSending] = useState(false);
     const [statusMessage, setStatusMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+
+    // --- 3. useRef para el formulario (requerido por EmailJS) ---
+    // useRef nos da una referencia directa al elemento <form> en el DOM.
+    const form = useRef();
+
+    // Estado para el mapa (eliminado statusMessage duplicado)
     const [showFullMap, setShowFullMap] = useState(false);
-    
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
-        ...prevState,
-        [name]: value,
+            ...prevState,
+            [name]: value,
         }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Datos enviados:', formData);
-        setStatusMessage(`Gracias por tu mensaje, ${formData.name}. Te responderemos pronto.`);
-        setFormData({ name: '', email: '', message: '' });
+        setIsSending(true);
+        setStatusMessage('');
+        setIsError(false);
+
+        // emailjs.sendForm
+        emailjs.sendForm(
+            'service_dbuswek',
+            'template_uukyim2',
+            form.current,
+            '2pNvQ3qqGkHqzK-P3'
+        )
+        .then((result) => {
+            console.log('Email enviado OK:', result.text);
+            setStatusMessage('¡Gracias por tu mensaje! Te responderemos pronto.');
+            setIsError(false);
+            setFormData({ name: '', email: '', message: '' }); // Limpia el formulario
+        }, (error) => {
+            console.error('Error al enviar Email:', error.text);
+            setStatusMessage('Ocurrió un error al enviar tu mensaje. Inténtalo de nuevo.');
+            setIsError(true);
+        })
+        .finally(() => {
+            setIsSending(false);
+        });
     };
 
     return (
@@ -32,13 +62,19 @@ function ContactPage() {
         <Helmet>
             <title>Contacto - Hotel Hilton</title>
         </Helmet>
-        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg mb-12">
             <h1 className="text-4xl font-bold text-center text-gray-800 mb-2">Contáctanos</h1>
             <p className="text-center text-gray-600 mb-8">
             ¿Tienes alguna duda? Escríbenos y te responderemos a la brevedad.
             </p>
 
-            <form onSubmit={handleSubmit}>
+            {statusMessage && (
+                <p className={`p-3 rounded-md mb-4 text-sm ${isError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                    {statusMessage}
+                </p>
+            )}
+
+            <form ref={form} onSubmit={handleSubmit}>
             <div className="mb-4">
                 <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Nombre</label>
                 <input
@@ -61,7 +97,7 @@ function ContactPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-            />
+                />
             </div>
             <div className="mb-6">
                 <label htmlFor="message" className="block text-gray-700 font-medium mb-2">Mensaje</label>
@@ -78,23 +114,20 @@ function ContactPage() {
             <div className="text-center">
                 <button
                 type="submit"
-                className="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition duration-300">
-                Enviar Mensaje
+                className={`bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 transition duration-300 ${isSending ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={isSending}
+                >
+                {isSending ? 'Enviando...' : 'Enviar Mensaje'}
                 </button>
             </div>
             </form>
-            
-            {statusMessage && (
-                <p className="mt-6 text-center text-green-600 bg-green-100 p-4 rounded-lg">
-                {statusMessage}
-                </p>
-            )}
+
         </div>
-            
+
         {/* --- UBICACIÓN --- */}
             <div className="max-w-4xl mx-auto mt-12">
                 <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Nuestra Ubicación</h2>
-                
+
                 {/* Mini-mapa con botón */}
                 {!showFullMap && (
                     <div className="relative h-64 rounded-lg shadow-lg overflow-hidden mb-6">
@@ -102,14 +135,12 @@ function ContactPage() {
                         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
                             <button
                                 onClick={() => setShowFullMap(true)}
-                                className="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center gap-2"
-                            >
+                                className="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center gap-2">
                                 📍 Ver ubicación en el mapa
                             </button>
                         </div>
                     </div>
                 )}
-
                 {/* Mapa completo (se muestra al hacer clic en el botón) */}
                 {showFullMap && (
                     <div className="h-[60vh] rounded-lg shadow-lg overflow-hidden">
