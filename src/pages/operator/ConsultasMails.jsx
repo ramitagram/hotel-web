@@ -41,7 +41,7 @@ export default function ConsultasMails() {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold text-rose-900 mb-4">📧 Enviar Consulta</h1>
+      <h1 className="text-2xl font-bold text-rose-900 mb-4">Enviar Consulta</h1>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

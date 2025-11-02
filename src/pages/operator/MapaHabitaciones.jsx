@@ -1,192 +1,159 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import "./mapa.css"; // puedes crear este archivo para estilos extra
+import "./mapa.css";
+
+/**
+ * MapaHabitaciones (compacto, 5 hab en una sola fila)
+ * - 5 pisos, 1 habitación por piso (101..501)
+ * - Tarjetas limpias, botones claros
+ * - Carrusel horizontal (no quedan una debajo de otra)
+ * - Persistencia en localStorage
+ */
 
 export default function MapaHabitaciones() {
-  // Generar 3 pisos con 2 habitaciones cada uno
-  const generarHabitaciones = () => {
-    const lista = [];
-    for (let piso = 1; piso <= 3; piso++) {
-      for (let hab = 1; hab <= 2; hab++) {
-        const num = piso * 100 + hab;
-        lista.push({
-          id: num,
-          piso,
-          estado: "libre",
-          fechaInicio: null,
-          fechaFin: null,
-        });
-      }
-    }
-    return lista;
-  };
+  const generarHabitaciones = () =>
+    Array.from({ length: 5 }, (_, i) => {
+      const piso = i + 1;
+      return { id: piso * 100 + 1, piso, estado: "libre", fechaInicio: "", fechaFin: "" };
+    });
 
-  // Estado con persistencia en localStorage
   const [habitaciones, setHabitaciones] = useState(() => {
-    const guardado = localStorage.getItem("habitaciones");
-    return guardado ? JSON.parse(guardado) : generarHabitaciones();
+    try {
+      const guardado = JSON.parse(localStorage.getItem("habitaciones") || "null");
+      if (
+        guardado &&
+        Array.isArray(guardado) &&
+        guardado.length === 5 &&
+        guardado.every((h, i) => h.piso === i + 1)
+      )
+        return guardado;
+    } catch {}
+    return generarHabitaciones();
   });
 
-  // Guardar cambios
   useEffect(() => {
     localStorage.setItem("habitaciones", JSON.stringify(habitaciones));
   }, [habitaciones]);
 
-  // Cambiar estado manualmente
-  const cambiarEstado = (id, nuevoEstado) => {
-    setHabitaciones((prev) =>
-      prev.map((hab) =>
-        hab.id === id ? { ...hab, estado: nuevoEstado } : hab
-      )
-    );
-  };
+  const cambiarEstado = (id, estado) =>
+    setHabitaciones((prev) => prev.map((h) => (h.id === id ? { ...h, estado } : h)));
 
-  // Asignar fechas de reserva
-  const actualizarFechas = (id, campo, valor) => {
-    setHabitaciones((prev) =>
-      prev.map((hab) =>
-        hab.id === id ? { ...hab, [campo]: valor } : hab
-      )
-    );
-  };
+  const actualizarFechas = (id, campo, valor) =>
+    setHabitaciones((prev) => prev.map((h) => (h.id === id ? { ...h, [campo]: valor } : h)));
 
-  // Colores para estados
   const colores = {
-    libre: "bg-green-100 border-green-400",
-    ocupada: "bg-red-100 border-red-400",
-    limpieza: "bg-yellow-100 border-yellow-400",
-    servicio: "bg-gray-100 border-gray-400",
+    libre: "bg-emerald-50 border-emerald-300",
+    ocupada: "bg-rose-50 border-rose-300",
+    limpieza: "bg-amber-50 border-amber-300",
+    servicio: "bg-slate-50 border-slate-300",
   };
 
-  // Agrupar por piso
-  const pisos = [1, 2, 3].map((piso) =>
-    habitaciones.filter((h) => h.piso === piso)
-  );
-
-  // Función para resaltar días en el calendario
   const tileClassName = ({ date }, hab) => {
     if (hab.fechaInicio && hab.fechaFin) {
-      const inicio = new Date(hab.fechaInicio);
+      const ini = new Date(hab.fechaInicio);
       const fin = new Date(hab.fechaFin);
-      if (date >= inicio && date <= fin) {
-        return "ocupado"; // clase CSS personalizada
-      }
+      if (date >= ini && date <= fin) return "tile-ocupado";
     }
-    return "libre";
+    return undefined;
   };
 
   return (
-    <div className="p-6 bg-stone-50 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6 text-center text-rose-900">
-        Mapa de Habitaciones
-      </h1>
+    <div className="min-h-screen bg-white">
+      <header className="px-4 sm:px-6 py-4 border-b border-slate-200">
+        <h1 className="text-2xl font-bold text-slate-900">Mapa de Habitaciones</h1>
+      </header>
 
-      {pisos.map((habitacionesPiso, i) => (
-        <div key={i} className="mb-10">
-          <h2 className="text-xl font-semibold mb-4 text-rose-700">
-            Piso {i + 1}
-          </h2>
-          <div className="grid grid-cols-2 gap-6">
-            {habitacionesPiso.map((hab) => (
+      {/* Carrusel horizontal */}
+      <div className="px-4 sm:px-6 py-6">
+        <div className="overflow-x-auto">
+          <div className="inline-flex gap-4 md:gap-6 pb-2 min-w-full">
+            {habitaciones.map((hab) => (
               <div
                 key={hab.id}
-                className={`p-4 rounded-2xl border-2 shadow-md ${colores[hab.estado]} transition`}
+                className={`w-[320px] shrink-0 border-2 rounded-2xl p-4 shadow-sm ${colores[hab.estado]}`}
               >
-                <h3 className="text-lg font-bold text-gray-800 mb-2">
-                  Habitación {hab.id}
-                </h3>
-                <p className="text-sm text-gray-600 mb-2">
-                  Estado:{" "}
-                  <span className="font-semibold capitalize">
-                    {hab.estado}
-                  </span>
-                </p>
+                <div className="mb-3">
+                  <div className="text-xs text-slate-500">Piso {hab.piso}</div>
+                  <h3 className="text-lg font-semibold text-slate-900">Habitación {hab.id}</h3>
+                </div>
 
-                {/* Botones de estado */}
                 <div className="flex flex-wrap gap-2 mb-4">
-                  <button
-                    onClick={() => cambiarEstado(hab.id, "libre")}
-                    className="px-3 py-1 bg-green-500 text-white rounded text-sm"
-                  >
-                    Liberar
-                  </button>
-                  <button
-                    onClick={() => cambiarEstado(hab.id, "ocupada")}
-                    className="px-3 py-1 bg-red-500 text-white rounded text-sm"
-                  >
-                    Ocupar
-                  </button>
-                  <button
-                    onClick={() => cambiarEstado(hab.id, "limpieza")}
-                    className="px-3 py-1 bg-yellow-400 text-black rounded text-sm"
-                  >
-                    Limpieza
-                  </button>
-                  <button
-                    onClick={() => cambiarEstado(hab.id, "servicio")}
-                    className="px-3 py-1 bg-gray-500 text-white rounded text-sm"
-                  >
-                    F/S
-                  </button>
+                  <EstadoBtn onClick={() => cambiarEstado(hab.id, "libre")} label="Libre" className="bg-emerald-600 hover:bg-emerald-700 text-white" />
+                  <EstadoBtn onClick={() => cambiarEstado(hab.id, "ocupada")} label="Ocupar" className="bg-rose-600 hover:bg-rose-700 text-white" />
+                  <EstadoBtn onClick={() => cambiarEstado(hab.id, "limpieza")} label="Limpieza" className="bg-amber-400 hover:bg-amber-500 text-amber-900" />
+                  <EstadoBtn onClick={() => cambiarEstado(hab.id, "servicio")} label="F/S" className="bg-slate-600 hover:bg-slate-700 text-white" />
                 </div>
 
-                {/* Fechas */}
-                <div className="flex flex-col gap-2 mb-4">
-                  <label className="text-sm font-semibold text-gray-700">
-                    Fecha inicio:
-                    <input
-                      type="date"
-                      value={hab.fechaInicio || ""}
-                      onChange={(e) =>
-                        actualizarFechas(hab.id, "fechaInicio", e.target.value)
-                      }
-                      className="ml-2 border p-1 rounded"
-                    />
-                  </label>
-                  <label className="text-sm font-semibold text-gray-700">
-                    Fecha fin:
-                    <input
-                      type="date"
-                      value={hab.fechaFin || ""}
-                      onChange={(e) =>
-                        actualizarFechas(hab.id, "fechaFin", e.target.value)
-                      }
-                      className="ml-2 border p-1 rounded"
-                    />
-                  </label>
-                </div>
-
-                {/* Calendario */}
-                <div className="border rounded-lg overflow-hidden">
-                  <Calendar
-                    tileClassName={(props) => tileClassName(props, hab)}
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <DateField
+                    label="Inicio"
+                    value={hab.fechaInicio}
+                    onChange={(v) => actualizarFechas(hab.id, "fechaInicio", v)}
                   />
+                  <DateField
+                    label="Fin"
+                    value={hab.fechaFin}
+                    onChange={(v) => actualizarFechas(hab.id, "fechaFin", v)}
+                  />
+                </div>
+
+                <div className="border rounded-xl overflow-hidden bg-white">
+                  <Calendar tileClassName={(props) => tileClassName(props, hab)} />
                 </div>
               </div>
             ))}
           </div>
         </div>
-      ))}
 
-      {/* Leyenda */}
-      <div className="mt-10">
-        <h2 className="font-semibold mb-2 text-rose-800">Leyenda:</h2>
-        <div className="flex gap-6 text-sm">
-          <span className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-green-400 rounded"></div> Libre
-          </span>
-          <span className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-red-400 rounded"></div> Ocupada
-          </span>
-          <span className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-yellow-300 rounded"></div> Limpieza
-          </span>
-          <span className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-gray-300 rounded"></div> Fuera de servicio
-          </span>
+        {/* Leyenda compacta */}
+        <div className="mt-6 flex flex-wrap gap-4 text-sm">
+          <LegendDot color="bg-emerald-500" text="Libre" />
+          <LegendDot color="bg-rose-500" text="Ocupada" />
+          <LegendDot color="bg-amber-500" text="Limpieza" />
+          <LegendDot color="bg-slate-500" text="F/S" />
         </div>
       </div>
+
+      {/* Estilo mínimo para resaltar días reservados */}
+      <style>{`
+        .tile-ocupado { background: rgba(16,185,129,0.15) !important; position: relative; }
+        .tile-ocupado::after { content:''; position:absolute; inset:0; outline:2px solid rgba(16,185,129,0.35); outline-offset:-2px; border-radius:6px; }
+      `}</style>
     </div>
+  );
+}
+
+function EstadoBtn({ onClick, label, className = "" }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-3 py-1.5 text-xs rounded-xl active:scale-[0.98] transition ${className}`}
+    >
+      {label}
+    </button>
+  );
+}
+
+function DateField({ label, value, onChange }) {
+  return (
+    <label className="text-sm text-slate-700 flex flex-col">
+      {label}
+      <input
+        type="date"
+        value={value || ""}
+        onChange={(e) => onChange(e.target.value)}
+        className="mt-1 border rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-white"
+      />
+    </label>
+  );
+}
+
+function LegendDot({ color, text }) {
+  return (
+    <span className="inline-flex items-center gap-2">
+      <span className={`w-3 h-3 rounded-full ${color}`} />
+      <span className="text-slate-600">{text}</span>
+    </span>
   );
 }
