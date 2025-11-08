@@ -74,19 +74,19 @@ export default function AdminLayout() {
               to="/admin"
               className="block py-2 px-3 rounded hover:bg-blue-800 transition"
             >
-              📊 Dashboard
+              Dashboard
             </Link>
             <Link
               to="/admin/habitaciones"
               className="block py-2 px-3 rounded hover:bg-blue-800 transition"
             >
-              🏠 CRUD Habitaciones
+              CRUD Habitaciones
             </Link>
             <Link
               to="/admin/operadores"
               className="block py-2 px-3 rounded hover:bg-blue-800 transition"
             >
-              👥 CRUD Operadores
+              CRUD Operadores
             </Link>
           </nav>
         </div>
@@ -111,7 +111,7 @@ export default function AdminLayout() {
             </p>
           </div>
           <div className="bg-white shadow px-4 py-2 rounded-xl text-sm">
-            👤 Admin | <span className="text-blue-600">Hotel Sunshine</span>
+            Admin | <span className="text-blue-600">Hotel Sunshine</span>
           </div>
         </header>
 
@@ -145,7 +145,7 @@ export default function AdminLayout() {
             {/* Gráfico de ingresos por habitación */}
             <div className="bg-white rounded-2xl shadow-md p-6">
               <h2 className="text-lg font-semibold text-gray-700 mb-3">
-                💰 Ingresos por Habitación
+                Ingresos por Habitación
               </h2>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={dataIngresos}>
@@ -191,7 +191,7 @@ export default function AdminLayout() {
           {/* === Ocupación semanal === */}
           <div className="mt-10 bg-white rounded-2xl shadow-md p-6">
             <h2 className="text-lg font-semibold text-gray-700 mb-3">
-              📅 Ocupación Semanal
+              Ocupación Semanal
             </h2>
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={dataSemanal}>

@@ -16,16 +16,16 @@ export default function OperatorLayout() {
 
           <nav className="space-y-2">
             <NavLink to="/operator/mapa" className={linkClass}>
-              🗺️ Mapa de Habitaciones
+              Mapa de Habitaciones
             </NavLink>
             <NavLink to="/operator/reservas" className={linkClass}>
-              📅 Consultar / Liberar Reservas
+              Consultar / Liberar Reservas
             </NavLink>
             <NavLink to="/operator/pagos" className={linkClass}>
-              💳 Procesar Pagos
+              Procesar Pagos
             </NavLink>
             <NavLink to="/operator/consultas" className={linkClass}>
-              ✉️ Consultas / Mails
+              Consultas / Mails
             </NavLink>
           </nav>
         </div>
@@ -50,7 +50,7 @@ export default function OperatorLayout() {
             </p>
           </div>
           <div className="bg-white shadow px-4 py-2 rounded-xl text-sm">
-            👤 Operador | <span className="text-red-600">Hotel Sunshine</span>
+            Operador | <span className="text-red-600">Hotel Sunshine</span>
           </div>
         </header>
 
