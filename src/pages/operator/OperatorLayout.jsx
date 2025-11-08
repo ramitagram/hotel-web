@@ -15,9 +15,6 @@ export default function OperatorLayout() {
           <h2 className="text-2xl font-bold mb-8 tracking-wide">Hotel Operador</h2>
 
           <nav className="space-y-2">
-            <NavLink to="/operator" end className={linkClass}>
-              🧭 Resumen
-            </NavLink>
             <NavLink to="/operator/mapa" className={linkClass}>
               🗺️ Mapa de Habitaciones
             </NavLink>
